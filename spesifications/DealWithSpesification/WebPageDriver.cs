@@ -36,7 +36,7 @@ public class WebPageDriver
         var verifyItemInput = _page.GetByLabel("Verify item");
         Assert.NotNull(verifyItemInput);
         await verifyItemInput.FillAsync(itemId);
-        var verifyButton = _page.GetByText("Verify");
+        var verifyButton = _page.GetByRole(AriaRole.Button, new() { Name = "Verify" });
         Assert.NotNull(verifyButton);
         await verifyButton.ClickAsync();
     }
