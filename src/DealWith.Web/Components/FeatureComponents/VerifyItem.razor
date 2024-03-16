@@ -1,4 +1,23 @@
-<form>
-    <label>Verify item <input type="text" placeholder="item id"></label>
+@using DealWith.Web.Components.FeatureComponents.VerifyItemFeature
+@inject IVerifyItemService VerifyItemService
+
+<EditForm EditContext="_editContext" OnSubmit="OnSubmit" FormName="VerifyItemForm">
+    <label>Verify item <InputText @bind-Value="_verifyItemInfo!.ItemId" /></label>
     <input type="submit" value="Verify">
-</form>
+</EditForm>
+
+@code{
+    private EditContext? _editContext;
+    private VerifyItemInfo _verifyItemInfo = new VerifyItemInfo();
+
+    override protected async Task OnInitializedAsync()
+    {
+        await Task.CompletedTask;
+        _editContext = new EditContext(_verifyItemInfo);
+    }
+
+    private async Task OnSubmit()
+    {
+        var result = await VerifyItemService.VerifyItemAsync(_verifyItemInfo);
+    }
+}
