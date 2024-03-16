@@ -1,0 +1,13 @@
+@inherits TestContext
+@using DealWith.Web.Components.FeatureComponents;
+
+@code {
+    [Fact]
+    public void ShouldHaveInputField()
+    {
+        var cut = Render(@<VerifyItem />);
+        var markup = cut.Markup;
+        Assert.NotNull(markup);
+        Assert.Fail(markup);
+    }
+}
