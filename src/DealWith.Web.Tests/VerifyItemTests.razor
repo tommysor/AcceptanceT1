@@ -9,4 +9,12 @@
         var label = cut.Find("label");
         label.MarkupMatches(@<label>Verify item <input type="text" placeholder:ignore /></label>);
     }
+
+    [Fact]
+    public void ShouldHaveSubmitButton()
+    {
+        var cut = Render(@<VerifyItem />);
+        var button = cut.Find("input[type=submit]");
+        button.MarkupMatches(@<input type="submit" value="Verify">);
+    }
 }
