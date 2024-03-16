@@ -1,9 +1,7 @@
 #!/bin/bash
 
-pushd ./src
-dotnet run --project DealWith.AppHost/ &
+dotnet run --project src/DealWith.AppHost/ &
 APP_PID=$!
-popd
 
 # Wait for the app to start
 sleep 15

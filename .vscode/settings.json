@@ -1,5 +1,5 @@
 {
     "git.autofetch": true,
-    "dotnet.defaultSolution": "src/DealWith.sln"
+    "dotnet.defaultSolution": "DealWith.sln"
     // "dotnet.defaultSolution": "spesifications/DealWithSpesification.sln"
 }

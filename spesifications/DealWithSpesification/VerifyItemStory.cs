@@ -23,8 +23,8 @@ public class VerifyItemStory
     }
 
     [Fact(Skip = "Not implemented")]
-    public async Task ShouldShowUnknownWhenItemIsNotFound() { }
+    public Task ShouldShowUnknownWhenItemIsNotFound() => Task.CompletedTask;
 
     [Fact(Skip = "Not implemented")]
-    public async Task ShouldShowAlreadySoldWhenItemIsSold() { }
+    public Task ShouldShowAlreadySoldWhenItemIsSold() => Task.CompletedTask;
 }

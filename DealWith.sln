@@ -2,15 +2,15 @@
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.0.0
 MinimumVisualStudioVersion = 17.8.0.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.AppHost", "DealWith.AppHost\DealWith.AppHost.csproj", "{8165DD80-E97B-44CC-A02F-E62361A8E608}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.AppHost", "src\DealWith.AppHost\DealWith.AppHost.csproj", "{8165DD80-E97B-44CC-A02F-E62361A8E608}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.ServiceDefaults", "DealWith.ServiceDefaults\DealWith.ServiceDefaults.csproj", "{FE03FC7D-8503-497D-8512-6301823A9CE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.ServiceDefaults", "src\DealWith.ServiceDefaults\DealWith.ServiceDefaults.csproj", "{FE03FC7D-8503-497D-8512-6301823A9CE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.ApiService", "DealWith.ApiService\DealWith.ApiService.csproj", "{3FB839D3-4CB4-4F55-9F29-4C3F7EE022B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.ApiService", "src\DealWith.ApiService\DealWith.ApiService.csproj", "{3FB839D3-4CB4-4F55-9F29-4C3F7EE022B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.Web", "DealWith.Web\DealWith.Web.csproj", "{4055AABA-FF86-48C2-9C9F-8DB785C8ABCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DealWith.Web", "src\DealWith.Web\DealWith.Web.csproj", "{4055AABA-FF86-48C2-9C9F-8DB785C8ABCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DealWith.Web.Tests", "DealWith.Web.Tests\DealWith.Web.Tests.csproj", "{4F9C703B-6CD9-4F43-8854-DF3468272CF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DealWith.Web.Tests", "src\DealWith.Web.Tests\DealWith.Web.Tests.csproj", "{4F9C703B-6CD9-4F43-8854-DF3468272CF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

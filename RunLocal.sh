@@ -1,6 +1,4 @@
 #!/bin/bash
 
-pushd ./src
 dotnet build
-dotnet run --project DealWith.AppHost/
-popd
+dotnet watch --project src/DealWith.AppHost/

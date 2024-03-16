@@ -6,8 +6,7 @@
     public void ShouldHaveInputField()
     {
         var cut = Render(@<VerifyItem />);
-        var markup = cut.Markup;
-        Assert.NotNull(markup);
-        Assert.Fail(markup);
+        var label = cut.Find("label");
+        label.MarkupMatches(@<label>Verify item <input type="text" placeholder:ignore /></label>);
     }
 }
