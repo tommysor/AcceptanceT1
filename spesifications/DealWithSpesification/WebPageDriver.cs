@@ -34,7 +34,6 @@ public class WebPageDriver
     public async Task VerifyItem(string itemId)
     {
         var verifyItemInput = _page.GetByLabel("Verify item");
-        Assert.NotNull(verifyItemInput);
         await verifyItemInput.FillAsync(itemId);
         var verifyButton = _page.GetByRole(AriaRole.Button, new() { Name = "Verify" });
         Assert.NotNull(verifyButton);
@@ -45,8 +44,9 @@ public class WebPageDriver
     {
         var verifyItemResult = await _page.WaitForSelectorAsync("#verify-item-result");
         Assert.NotNull(verifyItemResult);
-        var innerHtml = await verifyItemResult.InnerHTMLAsync();
-        Assert.Contains(itemId, innerHtml);
-        Assert.Contains("is valid", innerHtml);
+        var resultItemId = _page.Locator("#verify-item-result-itemid");
+        await Assertions.Expect(resultItemId).ToHaveTextAsync(itemId);
+        var resultIsValid = _page.Locator("#verify-item-result-isvalid");
+        await Assertions.Expect(resultIsValid).ToHaveTextAsync("True");
     }
 }
