@@ -15,7 +15,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddOutputCache();
 
-builder.Services.AddHttpClient<VerifyItemService>(client => client.BaseAddress = new("http://apiservice"));
+builder.Services.AddHttpClient<IVerifyItemService, VerifyItemService>(client => client.BaseAddress = new("http://apiservice"));
 
 var app = builder.Build();
 

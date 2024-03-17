@@ -9,13 +9,15 @@ public class VerifyItemService : IVerifyItemService
         _httpClient = httpClient;
     }
 
-    public async Task<VerifyItemResult> VerifyItemAsync(VerifyItemInfo item)
+    public async Task<VerifyItemResult?> VerifyItemAsync(VerifyItemInfo item)
     {
-        await Task.CompletedTask;
-        return new VerifyItemResult
+        var request = new
         {
-            ItemId = item.ItemId,
-            IsValid = true
+            ItemId = item.ItemId
         };
+        var response = await _httpClient.PostAsJsonAsync("verify-item", request);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<VerifyItemResult>();
+        return result;
     }
 }
