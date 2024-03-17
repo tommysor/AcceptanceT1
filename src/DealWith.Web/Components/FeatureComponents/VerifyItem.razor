@@ -1,23 +1,44 @@
 @using DealWith.Web.Components.FeatureComponents.VerifyItemFeature
 @inject IVerifyItemService VerifyItemService
+@rendermode InteractiveServer
 
+<h3>Verify</h3>
 <EditForm EditContext="_editContext" OnSubmit="OnSubmit" FormName="VerifyItemForm">
     <label>Verify item <InputText @bind-Value="_verifyItemInfo!.ItemId" /></label>
     <input type="submit" value="Verify">
 </EditForm>
 
+@if (_verifyItemResult != null)
+{
+    <div id="verify-item-result">
+        <h3>Result</h3>
+        <p>Item ID: @_verifyItemResult.ItemId</p>
+        <p>Is verified: @_verifyItemResult.IsValid</p>
+        <p>Message: @_verifyItemResult.Message</p>
+    </div>
+}
+
 @code{
     private EditContext? _editContext;
-    private VerifyItemInfo _verifyItemInfo = new VerifyItemInfo();
+    private VerifyItemInfo? _verifyItemInfo;
+    private VerifyItemResult? _verifyItemResult;
 
-    override protected async Task OnInitializedAsync()
+    override protected Task OnInitializedAsync()
     {
-        await Task.CompletedTask;
+        ResetInput();
+        return Task.CompletedTask;
+    }
+
+    private void ResetInput()
+    {
+        _verifyItemInfo = new VerifyItemInfo();
         _editContext = new EditContext(_verifyItemInfo);
     }
 
     private async Task OnSubmit()
     {
-        var result = await VerifyItemService.VerifyItemAsync(_verifyItemInfo);
+        _verifyItemResult = null;
+        _verifyItemResult = await VerifyItemService.VerifyItemAsync(_verifyItemInfo!);
+        ResetInput();
     }
 }
