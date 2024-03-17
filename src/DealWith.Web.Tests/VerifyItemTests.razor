@@ -12,7 +12,10 @@
     [Fact]
     public void ShouldHaveInputField()
     {
+        // Act
         var cut = Render(@<VerifyItem />);
+
+        // Assert
         var label = cut.Find("label");
         label.MarkupMatches(@<label>Verify item <input diff:ignore /></label>);
     }
@@ -20,7 +23,10 @@
     [Fact]
     public void ShouldHaveSubmitButton()
     {
+        // Act
         var cut = Render(@<VerifyItem />);
+
+        // Assert
         var button = cut.Find("input[type=submit]");
         button.MarkupMatches(@<input type="submit" value="Verify">);
     }
@@ -28,12 +34,43 @@
     [Fact]
     public void ShouldSubmitItemIdToService()
     {
+        // Arrange
         var itemId = "123";
         var cut = Render(@<VerifyItem />);
+
+        // Act
         var input = cut.Find("label input");
         input.Change(itemId);
         var button = cut.Find("input[type=submit]");
         button.Click();
+
+        // Assert
         _verifyItemService.Received(1).VerifyItemAsync(Arg.Is<VerifyItemInfo>(x => x.ItemId == itemId));
+    }
+
+    [Fact]
+    public void ShouldShowVerifyResult()
+    {
+        // Arrange
+        var result = new VerifyItemResult
+        {
+            ItemId = "123",
+            IsValid = false,
+            Message = "Item not found",
+        };
+        _verifyItemService.VerifyItemAsync(Arg.Any<VerifyItemInfo>()).Returns(result);
+        var cut = Render(@<VerifyItem />);
+
+        // Act
+        var button = cut.Find("input[type=submit]");
+        button.Click();
+
+        // Assert
+        var itemId = cut.Find("#verify-item-result-itemid");
+        itemId.MarkupMatches(@<span id:ignore>123</span>);
+        var isValid = cut.Find("#verify-item-result-isvalid");
+        isValid.MarkupMatches(@<span id:ignore>False</span>);
+        var message = cut.Find("#verify-item-result-message");
+        message.MarkupMatches(@<span id:ignore>Item not found</span>);
     }
 }
