@@ -1,5 +1,7 @@
 using DealWith.ApiService.Features.VerifyItemFeature;
 using DealWith.ApiService.Features.VerifyItemFeature.Contracts;
+using DealWith.ApiService.Features.VerifyItemFeature.Infrastructure;
+using NSubstitute;
 
 namespace DealWith.ApiService.Tests.Features.VerifyItemFeature;
 
@@ -7,11 +9,13 @@ public class VerifyItemServiceTests
 {
     private readonly VerifyItemService _sut;
     private readonly Bogus.Faker _faker;
+    private readonly IStorage _storageMock;
 
     public VerifyItemServiceTests()
     {
         _faker = new Bogus.Faker();
-        _sut = new VerifyItemService();
+        _storageMock = Substitute.For<IStorage>();
+        _sut = new VerifyItemService(_storageMock);
     }
 
     [Fact]
@@ -26,5 +30,24 @@ public class VerifyItemServiceTests
 
         // Then
         Assert.Equal(itemId, response.ItemId);
+    }
+
+    [Fact]
+    public async Task ShouldSaveRequest()
+    {
+        // Given
+        var itemId = "123";
+        var request = new VerifyItemRequest { ItemId = itemId };
+
+        // When
+        await _sut.VerifyItem(request, CancellationToken.None);
+
+        // Then
+        await _storageMock
+            .Received(1)
+            .SaveRequest(
+                Arg.Is<VerifyItemRequest>(x => x.ItemId == itemId),
+                Arg.Any<CancellationToken>()
+                );
     }
 }

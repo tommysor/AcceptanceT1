@@ -1,4 +1,6 @@
 using DealWith.ApiService.Features.VerifyItemFeature;
+using DealWith.ApiService.Features.VerifyItemFeature.Infrastructure;
+using DealWith.ApiService.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,7 @@ builder.AddServiceDefaults();
 builder.Services.AddProblemDetails();
 
 builder.Services.AddTransient<VerifyItemService>();
+builder.Services.AddSingleton<IStorage, Storage>();
 
 var app = builder.Build();
 
