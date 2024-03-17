@@ -6,14 +6,20 @@ namespace DealWith.ApiService.Features.VerifyItemFeature;
 public class VerifyItemService
 {
     private readonly IStorage _storage;
-    public VerifyItemService(IStorage storage)
+    private readonly ICentral _central;
+
+    public VerifyItemService(IStorage storage, ICentral central)
     {
         _storage = storage;
+        _central = central;
     }
 
     public async Task<VerifyItemResponse> VerifyItem(VerifyItemRequest request, CancellationToken cancellationToken)
     {
-       await _storage.SaveRequest(request, cancellationToken);
-       return new VerifyItemResponse { ItemId = request.ItemId, IsValid = true };
+        await _storage.SaveRequest(request, cancellationToken);
+        var centralRequest = new CentralVerifyRequest(request.ItemId);
+        var centralResponse = await _central.Verify(centralRequest, cancellationToken);
+        var response = new VerifyItemResponse { ItemId = request.ItemId, IsValid = centralResponse.IsValid, Message = centralResponse.Message };
+        return response;
     }
 }

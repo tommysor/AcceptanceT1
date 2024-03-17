@@ -12,6 +12,7 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddTransient<VerifyItemService>();
 builder.Services.AddSingleton<IStorage, Storage>();
+builder.Services.AddSingleton<ICentral, Central>();
 
 var app = builder.Build();
 

@@ -10,12 +10,18 @@ public class VerifyItemServiceTests
     private readonly VerifyItemService _sut;
     private readonly Bogus.Faker _faker;
     private readonly IStorage _storageMock;
+    private readonly ICentral _centralMock;
 
     public VerifyItemServiceTests()
     {
         _faker = new Bogus.Faker();
         _storageMock = Substitute.For<IStorage>();
-        _sut = new VerifyItemService(_storageMock);
+        _centralMock = Substitute.For<ICentral>();
+        _sut = new VerifyItemService(_storageMock, _centralMock);
+        var defaultCentralResponse = new CentralVerifyResponse("", true, "", Guid.Empty);
+        _centralMock
+            .Verify(Arg.Any<CentralVerifyRequest>(), Arg.Any<CancellationToken>())
+            .Returns(defaultCentralResponse);
     }
 
     [Fact]
@@ -49,5 +55,39 @@ public class VerifyItemServiceTests
                 Arg.Is<VerifyItemRequest>(x => x.ItemId == itemId),
                 Arg.Any<CancellationToken>()
                 );
+    }
+
+    [Fact]
+    public async Task ShouldReturnNotValidWhenCentralReturnsNotValid()
+    {
+        // Given
+        var request = new VerifyItemRequest { ItemId = "123" };
+        var centralResponse = new CentralVerifyResponse("", false, null, Guid.Empty);
+        _centralMock
+            .Verify(Arg.Any<CentralVerifyRequest>(), Arg.Any<CancellationToken>())
+            .Returns(centralResponse);
+
+        // When
+        var response = await _sut.VerifyItem(request, CancellationToken.None);
+
+        // Then
+        Assert.False(response.IsValid);
+    }
+
+    [Fact]
+    public async Task ShouldReturnValidWhenCentralReturnsValid()
+    {
+        // Given
+        var request = new VerifyItemRequest { ItemId = "123" };
+        var centralResponse = new CentralVerifyResponse("", true, "", Guid.Empty);
+        _centralMock
+            .Verify(Arg.Any<CentralVerifyRequest>(), Arg.Any<CancellationToken>())
+            .Returns(centralResponse);
+
+        // When
+        var response = await _sut.VerifyItem(request, CancellationToken.None);
+
+        // Then
+        Assert.True(response.IsValid);
     }
 }
