@@ -5,18 +5,22 @@ namespace DealWith.ApiService.Infrastructure;
 
 public sealed class Central : ICentral
 {
-    private readonly Random _random;
+    private readonly HttpClient _httpClient;
 
-    public Central()
+    public Central(HttpClient httpClient)
     {
-        _random = new Random();
+        _httpClient = httpClient;
     }
 
-    public Task<CentralVerifyResponse> Verify(CentralVerifyRequest request, CancellationToken cancellationToken)
+    public async Task<CentralVerifyResponse> Verify(CentralVerifyRequest request, CancellationToken cancellationToken)
     {
-        var x = _random.Next(0, 2);
-        var isValid = x == 1;
-        var response = new CentralVerifyResponse(request.ItemId, isValid, "", Guid.NewGuid());
-        return Task.FromResult(response);
+        var response = await _httpClient.PostAsJsonAsync("central-verify", request, cancellationToken);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<CentralVerifyResponse>(cancellationToken: cancellationToken);
+        if (result is null)
+        {
+            throw new InvalidOperationException("The response from the central service was empty.");
+        }
+        return result;
     }
 }

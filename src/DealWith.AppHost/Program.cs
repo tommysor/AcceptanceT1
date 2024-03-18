@@ -1,6 +1,9 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-var apiService = builder.AddProject<Projects.DealWith_ApiService>("apiservice");
+var centralTestDouble = builder.AddProject<Projects.CentralTestDouble>("central");
+
+var apiService = builder.AddProject<Projects.DealWith_ApiService>("apiservice")
+    .WithReference(centralTestDouble);
 
 builder.AddProject<Projects.DealWith_Web>("webfrontend")
     .WithReference(apiService);

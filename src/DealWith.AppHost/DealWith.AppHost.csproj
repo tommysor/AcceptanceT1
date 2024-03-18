@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DealWith.ApiService\DealWith.ApiService.csproj" />
     <ProjectReference Include="..\DealWith.Web\DealWith.Web.csproj" />
+    <ProjectReference Include="..\CentralTestDouble\CentralTestDouble.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -12,7 +12,8 @@ builder.Services.AddProblemDetails();
 
 builder.Services.AddTransient<VerifyItemService>();
 builder.Services.AddSingleton<IStorage, Storage>();
-builder.Services.AddSingleton<ICentral, Central>();
+builder.Services.AddTransient<ICentral, Central>();
+builder.Services.AddHttpClient<ICentral, Central>(client => client.BaseAddress = new("http://central"));
 
 var app = builder.Build();
 

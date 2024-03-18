@@ -7,7 +7,7 @@
 /// </summary>
 public class VerifyItemStory
 {
-    [Fact(Skip = "Not implemented")]
+    [Fact(Skip = "`verifyItemInput.FillAsync(itemId)` Not working?")]
     public async Task ShouldShowOkWhenItemIsValid()
     {
         // Given
