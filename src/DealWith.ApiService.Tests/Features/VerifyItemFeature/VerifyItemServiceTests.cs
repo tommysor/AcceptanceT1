@@ -90,4 +90,25 @@ public class VerifyItemServiceTests
         // Then
         Assert.True(response.IsValid);
     }
+
+    [Theory]
+    [InlineData(null, "")]
+    [InlineData("", "")]
+    [InlineData("E001", "Item not found")]
+    [InlineData("zzzz", "Unknown")]
+    public async Task ShouldTranslateCentralMessage(string? centralMessage, string expectedMessage)
+    {
+        // Given
+        var request = new VerifyItemRequest { ItemId = "123" };
+        var centralResponse = new CentralVerifyResponse("123", false, centralMessage, Guid.Empty);
+        _centralMock
+            .Verify(Arg.Any<CentralVerifyRequest>(), Arg.Any<CancellationToken>())
+            .Returns(centralResponse);
+
+        // When
+        var response = await _sut.VerifyItem(request, CancellationToken.None);
+
+        // Then
+        Assert.Equal(expectedMessage, response.Message);
+    }
 }

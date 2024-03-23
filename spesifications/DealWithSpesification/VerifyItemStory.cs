@@ -28,7 +28,7 @@ public class VerifyItemStory
         // Given
         var webPageDriver = new WebPageDriver();
         var itemId = "123notfound4";
-        await webPageDriver.SetupCentralTestDouble(itemId, isValid: false, message: "Item not found");
+        await webPageDriver.SetupCentralTestDouble(itemId, isValid: false, message: "E001");
 
         // When
         await webPageDriver.GoToTheStore();

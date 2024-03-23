@@ -19,7 +19,8 @@ public class VerifyItemService
         await _storage.SaveRequest(request, cancellationToken);
         var centralRequest = new CentralVerifyRequest(request.ItemId);
         var centralResponse = await _central.Verify(centralRequest, cancellationToken);
-        var response = new VerifyItemResponse { ItemId = request.ItemId, IsValid = centralResponse.IsValid, Message = centralResponse.Message };
+        var message = CentralMessageMapper.MapMessage(centralResponse.Message);
+        var response = new VerifyItemResponse { ItemId = request.ItemId, IsValid = centralResponse.IsValid, Message = message };
         return response;
     }
 }
