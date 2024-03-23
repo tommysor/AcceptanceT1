@@ -24,7 +24,7 @@ public class WebPageDriver
         {
             BaseURL = _baseAddress,
         });
-        await _page.GotoAsync("/");
+        await _page.GotoAsync("/", new() { WaitUntil = WaitUntilState.NetworkIdle });
         var h1 = await _page.WaitForSelectorAsync("h1");
         Assert.NotNull(h1);
         var innerHtml = await h1.InnerHTMLAsync();
