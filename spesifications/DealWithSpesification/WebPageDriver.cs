@@ -40,13 +40,15 @@ public class WebPageDriver
         await verifyButton.ClickAsync();
     }
 
-    public async Task VerifyItemIsValid(string itemId)
+    public async Task AssertVerifyItemValidity(string itemId, bool isValid = true, string message = "")
     {
         var verifyItemResult = await _page.WaitForSelectorAsync("#verify-item-result");
         Assert.NotNull(verifyItemResult);
         var resultItemId = _page.Locator("#verify-item-result-itemid");
         await Assertions.Expect(resultItemId).ToHaveTextAsync(itemId);
         var resultIsValid = _page.Locator("#verify-item-result-isvalid");
-        await Assertions.Expect(resultIsValid).ToHaveTextAsync("True");
+        await Assertions.Expect(resultIsValid).ToHaveTextAsync(isValid.ToString());
+        var resultMessage = _page.Locator("#verify-item-result-message");
+        await Assertions.Expect(resultMessage).ToHaveTextAsync(message);
     }
 }

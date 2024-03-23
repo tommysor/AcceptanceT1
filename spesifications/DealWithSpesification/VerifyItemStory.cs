@@ -19,11 +19,24 @@ public class VerifyItemStory
         await webPageDriver.VerifyItem(itemId);
 
         // Then
-        await webPageDriver.VerifyItemIsValid(itemId);
+        await webPageDriver.AssertVerifyItemValidity(itemId);
     }
 
     [Fact(Skip = "Not implemented")]
-    public Task ShouldShowUnknownWhenItemIsNotFound() => Task.CompletedTask;
+    public async Task ShouldShowUnknownWhenItemIsNotFound()
+    {
+        // Given
+        var itemId = "123notfound4";
+        //todo setup CentralTestDouble
+
+        // When
+        var webPageDriver = new WebPageDriver();
+        await webPageDriver.GoToTheStore();
+        await webPageDriver.VerifyItem(itemId);
+
+        // Then
+        await webPageDriver.AssertVerifyItemValidity(itemId, isValid: false, message: "Item not found");
+    }
 
     [Fact(Skip = "Not implemented")]
     public Task ShouldShowAlreadySoldWhenItemIsSold() => Task.CompletedTask;
