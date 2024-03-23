@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Microsoft.Playwright;
 
 namespace DealWithSpesification;
@@ -8,18 +9,58 @@ public class WebPageDriver
     private IPlaywright _playwright = null!;
     private IBrowser _browser = null!;
     private IPage _page = null!;
-    private string _baseAddress = null!;
+    private readonly string _baseAddress;
+    private readonly string _centralTestDoubleBaseAddress;
+
+    public WebPageDriver()
+    {
+        _baseAddress = GetBaseAddress();
+        _centralTestDoubleBaseAddress = GetCentralTestDoubleBaseAddress();
+    }
+
+    private static string GetBaseAddress()
+    {
+        var baseAddress = Environment.GetEnvironmentVariable("SPESIFICATIONS_BASEADDRESS") ?? throw new InvalidOperationException("SPESIFICATIONS_BASEADDRESS not found");
+        baseAddress = AddSchemaIfNotPresent(baseAddress);
+        return baseAddress;
+    }
+
+    private static string AddSchemaIfNotPresent(string baseAddress)
+    {
+        var isContainsSchema = baseAddress.Contains("http://") || baseAddress.Contains("https://");
+        if (!isContainsSchema)
+        {
+            baseAddress = $"https://{baseAddress}";
+        }
+
+        return baseAddress;
+    }
+
+    private static string GetCentralTestDoubleBaseAddress()
+    {
+        var baseAddress = Environment.GetEnvironmentVariable("CENTRAL_TEST_DOUBLE_BASEADDRESS") ?? throw new InvalidOperationException("CENTRAL_TEST_DOUBLE_BASEADDRESS not found");
+        baseAddress = AddSchemaIfNotPresent(baseAddress);
+        return baseAddress;
+    }
+
+    public async Task SetupCentralTestDouble(string itemId, bool isValid, string message)
+    {
+        var client = new HttpClient { BaseAddress = new(_centralTestDoubleBaseAddress) };
+        var response = await client.PostAsJsonAsync("central-verify-set-next-response", new
+        {
+            ItemId = itemId,
+            IsValid = isValid,
+            Message = message,
+            ReferenceId = Guid.NewGuid(),
+        });
+        response.EnsureSuccessStatusCode();
+    }
 
     public async Task GoToTheStore()
     {
         _playwright = await Playwright.CreateAsync();
         _browser = await _playwright.Chromium.LaunchAsync(new() { Headless = true });
-        _baseAddress = Environment.GetEnvironmentVariable("SPESIFICATIONS_BASEADDRESS") ?? throw new InvalidOperationException("SPESIFICATIONS_BASEADDRESS not found");
-        var isContainsSchema = _baseAddress.Contains("http://") || _baseAddress.Contains("https://");
-        if (!isContainsSchema)
-        {
-            _baseAddress = $"https://{_baseAddress}";
-        }
+
         _page = await _browser.NewPageAsync(new BrowserNewPageOptions
         {
             BaseURL = _baseAddress,

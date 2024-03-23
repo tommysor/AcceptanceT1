@@ -22,15 +22,15 @@ public class VerifyItemStory
         await webPageDriver.AssertVerifyItemValidity(itemId);
     }
 
-    [Fact(Skip = "Not implemented")]
+    [Fact]
     public async Task ShouldShowUnknownWhenItemIsNotFound()
     {
         // Given
+        var webPageDriver = new WebPageDriver();
         var itemId = "123notfound4";
-        //todo setup CentralTestDouble
+        await webPageDriver.SetupCentralTestDouble(itemId, isValid: false, message: "Item not found");
 
         // When
-        var webPageDriver = new WebPageDriver();
         await webPageDriver.GoToTheStore();
         await webPageDriver.VerifyItem(itemId);
 
