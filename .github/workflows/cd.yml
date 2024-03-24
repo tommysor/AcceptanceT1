@@ -178,6 +178,7 @@ jobs:
   deploy-test:
     uses: ./.github/workflows/deploy.yml
     needs:
+    - deploy-acr
     - publish-apiservice
     - publish-webfrontend
     with:
