@@ -54,7 +54,7 @@ jobs:
 
         az group create --location norwayeast --name ${{ env.RG_ACR }}
 
-        az bicep lint --file .platform/main.acr.bicep
+        az bicep lint --file .platform/acr.main.bicep
 
         deployResult=$(az deployment group create \
           --mode Complete \
