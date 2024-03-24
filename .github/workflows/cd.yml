@@ -1,0 +1,86 @@
+name: continuous-deployment
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '*.md'
+      - 'LICENSE'
+      - '.gitignore'
+      - '.vscode/*'
+      - '.devcontainer/*'
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.ref }}"
+  cancel-in-progress: false
+
+env:
+  CONTAINER_VERSION_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
+
+jobs:
+  deploy-acr:
+    runs-on: ubuntu-latest
+    environment: Shared
+    env:
+      RG_ACR: ${{ vars.RG_ACR }}
+    outputs:
+      containerRegistryUrl: ${{ steps.deployAcr.outputs.containerRegistryUrl }}
+      managedIdentityName: ${{ steps.deployAcr.outputs.managedIdentityName }}
+      apiserviceContainerImage: ${{ steps.deployAcr.outputs.apiserviceContainerImage }}
+      webfrontendContainerImage: ${{ steps.deployAcr.outputs.webfrontendContainerImage }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: 'Az login'
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    
+    - name: deploy acr
+      id: deployAcr
+      env:
+        deploymentName: ${{ env.RG_ACR }}-$(date +%Y-%m-%dT%H.%M.%S)-$(git rev-parse --short ${{ github.sha }})
+      run: |
+        echo "Deploying Container registry"
+        echo "deploymentName: ${{ env.deploymentName }}"
+
+        az group create --location norwayeast --name ${{ env.RG_ACR }}
+
+        az bicep lint --file .platform/main.acr.bicep
+
+        deployResult=$(az deployment group create \
+          --mode Complete \
+          --resource-group "${{ env.RG_ACR }}" \
+          --name "${{ env.deploymentName }}" \
+          --template-file ./.platform/acr.main.bicep \
+          )
+
+        echo "# Deploy result"
+        echo $deployResult
+        echo "# ---"
+        
+        echo "# setting outputs"
+        
+        # containerRegistryUrl
+        containerRegistryUrl=$(echo $deployResult | jq --raw-output '.properties.outputs.containerRegistryUrl.value')
+        echo "containerRegistryUrl=$containerRegistryUrl" >> $GITHUB_OUTPUT
+        # managedIdentityName
+        managedIdentityName=$(echo $deployResult | jq --raw-output '.properties.outputs.managedIdentityName.value')
+        echo "managedIdentityName: $managedIdentityName"
+        echo "managedIdentityName=$managedIdentityName" >> $GITHUB_OUTPUT
+
+        # Predict container image names now that we have the container registry url
+        apiserviceContainerImage=$containerRegistryUrl/${{ vars.APISERVICE_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "apiserviceContainerImage=$apiserviceContainerImage" >> $GITHUB_OUTPUT
+        webfrontendContainerImage=$containerRegistryUrl/${{ vars.WEBFRONTEND_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "webfrontendContainerImage=$webfrontendContainerImage" >> $GITHUB_OUTPUT
+        
+        echo "# done"
