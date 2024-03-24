@@ -99,7 +99,9 @@ jobs:
 
   publish-apiservice:
     runs-on: ubuntu-latest
-    needs: deploy-acr
+    needs:
+    - basic-tests
+    - deploy-acr
     env:
       containerRegistryUrl: ${{ needs.deploy-acr.outputs.containerRegistryUrl }}
     steps:
