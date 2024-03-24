@@ -174,3 +174,16 @@ jobs:
           -p ContainerRepository=${{ vars.WEBFRONTEND_CONTAINERREPOSITORY }}
 
         popd
+
+  deploy-test:
+    uses: ./.github/workflows/deploy.yml
+    needs:
+    - publish-apiservice
+    - publish-webfrontend
+    with:
+      environment: 'Test'
+      containerRegistryUrl: ${{ needs.deploy-acr.outputs.containerRegistryUrl }}
+      managedIdentityName: ${{ needs.deploy-acr.outputs.managedIdentityName }}
+      apiserviceContainerImage: ${{ needs.deploy-acr.outputs.apiserviceContainerImage }}
+      webfrontendContainerImage: ${{ needs.deploy-acr.outputs.webfrontendContainerImage }}
+    secrets: inherit
