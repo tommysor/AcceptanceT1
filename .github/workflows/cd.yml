@@ -24,6 +24,18 @@ env:
   CONTAINER_VERSION_TAG: ${{ github.run_id }}-${{ github.run_attempt }}
 
 jobs:
+  basic-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'
+        dotnet-quality: 'preview'
+    - run: dotnet workload restore
+    - run: dotnet tool restore
+    - run: dotnet test
+
   deploy-acr:
     runs-on: ubuntu-latest
     environment: Shared
