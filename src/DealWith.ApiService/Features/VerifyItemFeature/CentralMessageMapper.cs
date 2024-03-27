@@ -9,6 +9,7 @@ public static class CentralMessageMapper
             null => "",
             "" => "",
             "E001" => "Item not found",
+            "W123" => "Item already sold",
             _ => "Unknown",
         };
     }

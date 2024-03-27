@@ -95,6 +95,7 @@ public class VerifyItemServiceTests
     [InlineData(null, "")]
     [InlineData("", "")]
     [InlineData("E001", "Item not found")]
+    [InlineData("W123", "Item already sold")]
     [InlineData("zzzz", "Unknown")]
     public async Task ShouldTranslateCentralMessage(string? centralMessage, string expectedMessage)
     {
