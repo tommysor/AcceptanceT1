@@ -10,4 +10,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <ContainerBaseImage>mcr.microsoft.com/dotnet/nightly/aspnet:9.0.0-preview.2-jammy-chiseled</ContainerBaseImage>
+  </PropertyGroup>
+
 </Project>
