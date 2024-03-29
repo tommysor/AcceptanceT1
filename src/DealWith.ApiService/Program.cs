@@ -13,7 +13,7 @@ builder.Services.AddProblemDetails();
 builder.Services.AddTransient<VerifyItemService>();
 builder.Services.AddSingleton<IStorage, Storage>();
 builder.Services.AddTransient<ICentral, Central>();
-builder.Services.AddHttpClient<ICentral, Central>(client => client.BaseAddress = new("http://central"));
+builder.Services.AddHttpClient<ICentral, Central>(client => client.BaseAddress = new("https://central"));
 
 var app = builder.Build();
 
