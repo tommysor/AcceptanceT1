@@ -14,7 +14,7 @@ public sealed class Central : ICentral
 
     public async Task<CentralVerifyResponse> Verify(CentralVerifyRequest request, CancellationToken cancellationToken)
     {
-        var response = await _httpClient.PostAsJsonAsync("central-verify", request, cancellationToken);
+        var response = await _httpClient.PostAsJsonAsync("/central-verify", request, cancellationToken);
         response.EnsureSuccessStatusCode();
         var result = await response.Content.ReadFromJsonAsync<CentralVerifyResponse>(cancellationToken: cancellationToken);
         if (result is null)
