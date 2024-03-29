@@ -71,7 +71,6 @@ jobs:
           --parameters managedIdentityScope=${{ env.RG_ACR }} \
           --parameters apiserviceContainerImage=${{ inputs.apiserviceContainerImage }} \
           --parameters webfrontendContainerImage=${{ inputs.webfrontendContainerImage }} \
-          --parameters deployTimestamp=${{ env.DEPLOY_TIMESTAMP }} \
           )
 
         echo "# Deploy result"
