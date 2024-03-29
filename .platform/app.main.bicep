@@ -74,6 +74,7 @@ module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreE
         containerRegistryUrl: containerRegistryUrl
         managedIdentityClientId: managedIdentity.properties.clientId
         managedIdentityId: managedIdentity.id
+        additionalEnvironmentVariables: []
       }
     ]
   }
@@ -114,6 +115,7 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
         appIngressAllowInsecure: false
         appIngressExternal: true
         applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
+        additionalEnvironmentVariables: []
       }
     ]
   }

@@ -34,7 +34,7 @@ resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-11-02-
   }
 }
 
-module containerapp 'containerapp.bicep' = [for containerapp in containerapps: {
+module containerapp2 'containerapp.bicep' = [for containerapp in containerapps: {
   name: '${containerapp.appName}-${deployTimestamp}'
   params: {
     location: location
@@ -64,5 +64,5 @@ type containerappDef = {
   appIngressAllowInsecure: bool
   appIngressExternal: bool
   applicationInsightsConnectionString: string
-  additionalEnvironmentVariables: object[]?
+  additionalEnvironmentVariables: object[]
 }
