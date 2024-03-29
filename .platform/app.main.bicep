@@ -101,7 +101,7 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
         additionalEnvironmentVariables: [
           {
             name: 'Services__central'
-            value: 'https://centraltestdouble.${containerAppsTestDoubles.outputs.containerAppsEnvironmentUrl}'
+            value: '"https://centraltestdouble.${containerAppsTestDoubles.outputs.containerAppsEnvironmentUrl}"'
           }
         ]
       }
