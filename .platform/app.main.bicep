@@ -18,8 +18,6 @@ param managedIdentityScope string
 param apiserviceContainerImage string
 param webfrontendContainerImage string
 
-param deployTimestamp string = utcNow()
-
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' existing = {
@@ -53,50 +51,37 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-11-02-preview' = {
+module containerAppsEnvironment 'containerappenvironment.bicep' = {
   name: 'acae${resourceToken}'
-  location: location
-  properties: {
-    appLogsConfiguration: {
-      destination: 'log-analytics'
-      logAnalyticsConfiguration: {
-        customerId: logAnalytics.properties.customerId
-        sharedKey: logAnalytics.listKeys().primarySharedKey
+  params: {
+    location: location
+    logAnalyticsCustomerId: logAnalytics.properties.customerId
+    logAnalyticsSharedKey: logAnalytics.listKeys().primarySharedKey
+    containerapps: [
+      {
+        appName: 'apiservice'
+        aspnetcoreEnvironment: aspnetcoreEnvironment
+        containerRegistryUrl: containerRegistryUrl
+        managedIdentityClientId: managedIdentity.properties.clientId
+        managedIdentityId: managedIdentity.id
+        containerImage: apiserviceContainerImage
+        appIngressAllowInsecure: true
+        appIngressExternal: false
+        applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
       }
-    }
+      {
+        appName: 'webfrontend'
+        aspnetcoreEnvironment: aspnetcoreEnvironment
+        containerRegistryUrl: containerRegistryUrl
+        managedIdentityClientId: managedIdentity.properties.clientId
+        managedIdentityId: managedIdentity.id
+        containerImage: webfrontendContainerImage
+        appIngressAllowInsecure: false
+        appIngressExternal: true
+        applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
+      }
+    ]
   }
 }
 
-module apiservice 'containerapp.bicep' = {
-  name: 'apiservice-${deployTimestamp}'
-  params: {
-    location: location
-    appName: 'apiservice'
-    aspnetcoreEnvironment: aspnetcoreEnvironment
-    containerAppsEnvironmentId: containerAppsEnvironment.id
-    containerImage: apiserviceContainerImage
-    containerRegistryUrl: containerRegistryUrl
-    managedIdentityClientId: managedIdentity.properties.clientId
-    managedIdentityId: managedIdentity.id
-    appIngressAllowInsecure: true
-    applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
-  }
-}
-
-module webfrontend 'containerapp.bicep' = {
-  name: 'webfrontend-${deployTimestamp}'
-  params: {
-    location: location
-    appName: 'webfrontend'
-    aspnetcoreEnvironment: aspnetcoreEnvironment
-    containerAppsEnvironmentId: containerAppsEnvironment.id
-    containerImage: webfrontendContainerImage
-    containerRegistryUrl: containerRegistryUrl
-    managedIdentityClientId: managedIdentity.properties.clientId
-    managedIdentityId: managedIdentity.id
-    appIngressExternal: true
-    applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
-  }
-}
-
-output webfrontendLatestRevisionFqdn string = webfrontend.outputs.latestRevisionFqdn
+output webfrontendLatestRevisionFqdn string = containerAppsEnvironment.outputs.containerAppsEnvironmentUrl
