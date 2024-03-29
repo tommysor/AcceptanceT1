@@ -84,4 +84,4 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
   }
 }
 
-output webfrontendLatestRevisionFqdn string = 'webfrontend.${containerAppsEnvironment.outputs.containerAppsEnvironmentUrl}'
+output webfrontendLatestRevisionFqdn string = containerAppsEnvironment.outputs.containerAppsEnvironmentUrl

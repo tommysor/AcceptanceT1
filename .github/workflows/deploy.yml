@@ -81,5 +81,7 @@ jobs:
 
         # webfrontendLatestRevisionFqdn
         webfrontendLatestRevisionFqdn=$(echo $deployResult | jq --raw-output '.properties.outputs.webfrontendLatestRevisionFqdn.value')
+        echo "Out1: $webfrontendLatestRevisionFqdn"
+        webfrontendLatestRevisionFqdn="webfrontend.$webfrontendLatestRevisionFqdn"
         echo "webfrontendLatestRevisionFqdn=$webfrontendLatestRevisionFqdn" >> $GITHUB_OUTPUT
         echo "webfrontendLatestRevisionFqdn: $webfrontendLatestRevisionFqdn"
