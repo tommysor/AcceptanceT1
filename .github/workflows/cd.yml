@@ -91,10 +91,13 @@ jobs:
 
         # Predict container image names now that we have the container registry url
         apiserviceContainerImage=$containerRegistryUrl/${{ vars.APISERVICE_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "#SET apiserviceContainerImage=$apiserviceContainerImage"
         echo "apiserviceContainerImage=$apiserviceContainerImage" >> $GITHUB_OUTPUT
         webfrontendContainerImage=$containerRegistryUrl/${{ vars.WEBFRONTEND_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "#SET webfrontendContainerImage=$webfrontendContainerImage"
         echo "webfrontendContainerImage=$webfrontendContainerImage" >> $GITHUB_OUTPUT
         centralTestDoubleContainerImage=$containerRegistryUrl/${{ vars.CENTRAL_TESTDOUBLE_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "#SET centralTestDoubleContainerImage=$centralTestDoubleContainerImage"
         echo "centralTestDoubleContainerImage=$centralTestDoubleContainerImage" >> $GITHUB_OUTPUT
         
         echo "# done"
@@ -215,6 +218,19 @@ jobs:
           -p ContainerRepository=${{ vars.CENTRAL_TESTDOUBLE_CONTAINERREPOSITORY }}
 
         popd
+
+  echo-vals:
+    runs-on: ubuntu-latest
+    needs:
+    - deploy-acr
+    steps:
+    - name: echotest
+      run: |
+        echo containerRegistryUrl: ${{ needs.deploy-acr.outputs.containerRegistryUrl }}
+        echo managedIdentityName: ${{ needs.deploy-acr.outputs.managedIdentityName }}
+        echo apiserviceContainerImage: ${{ needs.deploy-acr.outputs.apiserviceContainerImage }}
+        echo webfrontendContainerImage: ${{ needs.deploy-acr.outputs.webfrontendContainerImage }}
+        echo centralTestDoubleContainerImage: ${{ needs.deploy-acr.outputs.centralTestDoubleContainerImage }}
 
   deploy-test:
     uses: ./.github/workflows/deploy.yml
