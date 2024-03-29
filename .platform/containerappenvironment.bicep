@@ -7,6 +7,8 @@ param resourceGroupName string = resourceGroup().name
 @description('Primary location for all resources')
 param location string = resourceGroup().location
 
+param containerAppsEnvironmentName string
+
 @description('List of container apps to deploy')
 param containerapps containerappDef[]
 
@@ -19,7 +21,7 @@ param deployTimestamp string = utcNow()
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
 
 resource containerAppsEnvironment 'Microsoft.App/managedEnvironments@2023-11-02-preview' = {
-  name: 'acae${resourceToken}'
+  name: '${containerAppsEnvironmentName}${resourceToken}'
   location: location
   properties: {
     appLogsConfiguration: {

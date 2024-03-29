@@ -59,6 +59,7 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
 module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreEnvironment == 'Test' && centralTestDoubleContainerImage != '') {
   name: 'testdoubles${resourceToken}'
   params: {
+    containerAppsEnvironmentName: 'testdoubles'
     location: location
     logAnalyticsCustomerId: logAnalytics.properties.customerId
     logAnalyticsSharedKey: logAnalytics.listKeys().primarySharedKey
@@ -81,6 +82,7 @@ module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreE
 module containerAppsEnvironment 'containerappenvironment.bicep' = {
   name: 'acae${resourceToken}'
   params: {
+    containerAppsEnvironmentName: 'acae'
     location: location
     logAnalyticsCustomerId: logAnalytics.properties.customerId
     logAnalyticsSharedKey: logAnalytics.listKeys().primarySharedKey
