@@ -9,6 +9,10 @@ param location string = resourceGroup().location
 
 @minLength(3)
 @description('Environment for ASP.NET Core. Like "Development", "Production", ..')
+@allowed([
+  'Test'
+  'Production'
+])
 param aspnetcoreEnvironment string
 
 param containerRegistryUrl string
@@ -17,6 +21,7 @@ param managedIdentityScope string
 
 param apiserviceContainerImage string
 param webfrontendContainerImage string
+param centralTestDoubleContainerImage string = ''
 
 var resourceToken = toLower(uniqueString(subscription().id, resourceGroupName, location))
 
@@ -48,6 +53,28 @@ resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
     Application_Type: 'web'
     Flow_Type: 'Bluefield'
     WorkspaceResourceId: logAnalytics.id
+  }
+}
+
+module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreEnvironment == 'Test' && centralTestDoubleContainerImage != '') {
+  name: 'testdoubles${resourceToken}'
+  params: {
+    location: location
+    logAnalyticsCustomerId: logAnalytics.properties.customerId
+    logAnalyticsSharedKey: logAnalytics.listKeys().primarySharedKey
+    containerapps: [
+      {
+        appName: 'centralTestDouble'
+        aspnetcoreEnvironment: aspnetcoreEnvironment
+        appIngressAllowInsecure: false
+        appIngressExternal: true
+        applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
+        containerImage: centralTestDoubleContainerImage
+        containerRegistryUrl: containerRegistryUrl
+        managedIdentityClientId: managedIdentity.properties.clientId
+        managedIdentityId: managedIdentity.id
+      }
+    ]
   }
 }
 

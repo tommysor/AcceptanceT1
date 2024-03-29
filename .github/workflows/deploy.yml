@@ -18,6 +18,9 @@ on:
       webfrontendContainerImage:
         required: true
         type: string
+      centralTestDoubleContainerImage:
+        required: false
+        type: string
     outputs:
       webfrontendUrl:
         value: ${{ jobs.deploy.outputs.webfrontendUrl }}
@@ -71,6 +74,7 @@ jobs:
           --parameters managedIdentityScope=${{ env.RG_ACR }} \
           --parameters apiserviceContainerImage=${{ inputs.apiserviceContainerImage }} \
           --parameters webfrontendContainerImage=${{ inputs.webfrontendContainerImage }} \
+          --parameters centralTestDoubleContainerImage=${{ inputs.centralTestDoubleContainerImage }} \
           )
 
         echo "# Deploy result"

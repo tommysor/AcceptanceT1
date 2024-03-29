@@ -94,6 +94,8 @@ jobs:
         echo "apiserviceContainerImage=$apiserviceContainerImage" >> $GITHUB_OUTPUT
         webfrontendContainerImage=$containerRegistryUrl/${{ vars.WEBFRONTEND_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
         echo "webfrontendContainerImage=$webfrontendContainerImage" >> $GITHUB_OUTPUT
+        centralTestDoubleContainerImage=$containerRegistryUrl/${{ vars.CENTRAL_TESTDOUBLE_CONTAINERREPOSITORY }}:${{ env.CONTAINER_VERSION_TAG }}
+        echo "centralTestDoubleContainerImage=$centralTestDoubleContainerImage" >> $GITHUB_OUTPUT
         
         echo "# done"
 
@@ -218,6 +220,7 @@ jobs:
     uses: ./.github/workflows/deploy.yml
     needs:
     - deploy-acr
+    - publish-central-testdouble
     - publish-apiservice
     - publish-webfrontend
     with:
@@ -226,4 +229,5 @@ jobs:
       managedIdentityName: ${{ needs.deploy-acr.outputs.managedIdentityName }}
       apiserviceContainerImage: ${{ needs.deploy-acr.outputs.apiserviceContainerImage }}
       webfrontendContainerImage: ${{ needs.deploy-acr.outputs.webfrontendContainerImage }}
+      centralTestDoubleContainerImage: ${{ needs.deploy-acr.outputs.centralTestDoubleContainerImage }}
     secrets: inherit
