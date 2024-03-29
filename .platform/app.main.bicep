@@ -97,6 +97,12 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
         appIngressAllowInsecure: true
         appIngressExternal: false
         applicationInsightsConnectionString: applicationInsights.properties.ConnectionString
+        additionalEnvironmentVariables: [
+          {
+            name: 'Services__central'
+            value: 'centraltestdouble.${containerAppsTestDoubles.outputs.containerAppsEnvironmentUrl}'
+          }
+        ]
       }
       {
         appName: 'webfrontend'

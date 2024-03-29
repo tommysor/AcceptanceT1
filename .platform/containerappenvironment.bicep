@@ -48,6 +48,7 @@ module containerapp 'containerapp.bicep' = [for containerapp in containerapps: {
     appIngressAllowInsecure: containerapp.appIngressAllowInsecure
     appIngressExternal: containerapp.appIngressExternal
     applicationInsightsConnectionString: containerapp.applicationInsightsConnectionString
+    additionalEnvironmentVariables: containerapp.additionalEnvironmentVariables
   }
 }]
 
@@ -63,4 +64,5 @@ type containerappDef = {
   appIngressAllowInsecure: bool
   appIngressExternal: bool
   applicationInsightsConnectionString: string
+  additionalEnvironmentVariables: object[]?
 }
