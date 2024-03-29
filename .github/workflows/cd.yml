@@ -46,6 +46,7 @@ jobs:
       managedIdentityName: ${{ steps.deployAcr.outputs.managedIdentityName }}
       apiserviceContainerImage: ${{ steps.deployAcr.outputs.apiserviceContainerImage }}
       webfrontendContainerImage: ${{ steps.deployAcr.outputs.webfrontendContainerImage }}
+      centralTestDoubleContainerImage: ${{ steps.deployAcr.outputs.centralTestDoubleImage }}
 
     steps:
     - uses: actions/checkout@v4
