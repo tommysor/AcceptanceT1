@@ -43,7 +43,7 @@ var standardEnvironmentVariables = [
   }
 ]
 
-var environmentVariables = concat(standardEnvironmentVariables, additionalEnvironmentVariables)
+var environmentVariables = concat(standardEnvironmentVariables, (additionalEnvironmentVariables ?? []))
 
 resource app 'Microsoft.App/containerApps@2023-11-02-preview' = {
   name: appName
