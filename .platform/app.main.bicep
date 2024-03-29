@@ -65,7 +65,7 @@ module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreE
     logAnalyticsSharedKey: logAnalytics.listKeys().primarySharedKey
     containerapps: [
       {
-        appName: 'centralTestDouble'
+        appName: 'centraltestdouble'
         aspnetcoreEnvironment: aspnetcoreEnvironment
         appIngressAllowInsecure: false
         appIngressExternal: true
