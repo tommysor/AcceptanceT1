@@ -24,4 +24,12 @@ app.MapPost("/verify-item", VerifyItemEndpoints.VerifyItem);
 
 app.MapDefaultEndpoints();
 
+var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Configuration");
+var configuration = app.Services.GetRequiredService<IConfiguration>();
+var configs = configuration.AsEnumerable();
+foreach (var config in configs)
+{
+    logger.LogInformation($"{config.Key}: {config.Value}");
+}
+
 app.Run();
