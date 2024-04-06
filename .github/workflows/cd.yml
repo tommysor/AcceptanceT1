@@ -246,7 +246,13 @@ jobs:
       with:
         dotnet-version: '9.0'
         dotnet-quality: 'preview'
-    - run: |
+
+    - name: Setup Playwright
+      run: |
+        . ./SetupSpesifications.sh
+
+    - name: Run Specification
+      run: |
         pushd spesifications
 
         SPESIFICATIONS_BASEADDRESS=${{ needs.deploy-test.outputs.webfrontendUrl }} \
