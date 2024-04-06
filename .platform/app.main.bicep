@@ -80,6 +80,8 @@ module containerAppsTestDoubles 'containerappenvironment.bicep' = if(aspnetcoreE
   }
 }
 
+var centralTestDoubleFqdn = 'centraltestdouble.${containerAppsTestDoubles.outputs.containerAppsEnvironmentUrl}/'
+
 module containerAppsEnvironment 'containerappenvironment.bicep' = {
   name: 'acae${resourceToken}'
   params: {
@@ -101,7 +103,7 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
         additionalEnvironmentVariables: [
           {
             name: 'Services__central__0'
-            value: 'centraltestdouble.${containerAppsTestDoubles.outputs.containerAppsEnvironmentUrl}/'
+            value: centralTestDoubleFqdn
           }
         ]
       }
@@ -122,3 +124,4 @@ module containerAppsEnvironment 'containerappenvironment.bicep' = {
 }
 
 output webfrontendLatestRevisionFqdn string = containerAppsEnvironment.outputs.containerAppsEnvironmentUrl
+output centralTestDoubleFqdn string = centralTestDoubleFqdn

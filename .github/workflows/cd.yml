@@ -220,19 +220,6 @@ jobs:
 
         popd
 
-  echo-vals:
-    runs-on: ubuntu-latest
-    needs:
-    - deploy-acr
-    steps:
-    - name: echotest
-      run: |
-        echo containerRegistryUrl: ${{ needs.deploy-acr.outputs.containerRegistryUrl }}
-        echo managedIdentityName: ${{ needs.deploy-acr.outputs.managedIdentityName }}
-        echo apiserviceContainerImage: ${{ needs.deploy-acr.outputs.apiserviceContainerImage }}
-        echo webfrontendContainerImage: ${{ needs.deploy-acr.outputs.webfrontendContainerImage }}
-        echo centralTestDoubleContainerImage: ${{ needs.deploy-acr.outputs.centralTestDoubleContainerImage }}
-
   deploy-test:
     uses: ./.github/workflows/deploy.yml
     needs:
@@ -248,3 +235,20 @@ jobs:
       webfrontendContainerImage: ${{ needs.deploy-acr.outputs.webfrontendContainerImage }}
       centralTestDoubleContainerImage: ${{ needs.deploy-acr.outputs.centralTestDoubleContainerImage }}
     secrets: inherit
+
+  acceptance-test:
+    runs-on: ubuntu-latest
+    needs:
+    - deploy-test
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0'
+        dotnet-quality: 'preview'
+    - run: |
+        pushd spesifications
+
+        echo CentralTestDoubleUrl: ${{ needs.deploy-test.outputs.centralTestDoubleUrl}}
+
+        popd

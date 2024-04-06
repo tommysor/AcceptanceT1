@@ -24,6 +24,8 @@ on:
     outputs:
       webfrontendUrl:
         value: ${{ jobs.deploy.outputs.webfrontendUrl }}
+      centralTestDoubleUrl:
+        value: ${{ jobs.deploy.outputs.centralTestDoubleUrl }}
 
 env:
   GITHUB_SHA_SHORT: $(git rev-parse --short ${{ github.sha }})
@@ -36,6 +38,7 @@ jobs:
 
     outputs:
       webfrontendUrl: ${{ steps.deploy-app-environment.outputs.webfrontendLatestRevisionFqdn }}
+      centralTestDoubleUrl: ${{ steps.deploy-app-environment.outputs.centralTestDoubleFqdn }}
 
     env:
       RG_APP: ${{ vars.RG_APP }}
@@ -85,7 +88,10 @@ jobs:
 
         # webfrontendLatestRevisionFqdn
         webfrontendLatestRevisionFqdn=$(echo $deployResult | jq --raw-output '.properties.outputs.webfrontendLatestRevisionFqdn.value')
-        echo "Out1: $webfrontendLatestRevisionFqdn"
         webfrontendLatestRevisionFqdn="webfrontend.$webfrontendLatestRevisionFqdn"
         echo "webfrontendLatestRevisionFqdn=$webfrontendLatestRevisionFqdn" >> $GITHUB_OUTPUT
         echo "webfrontendLatestRevisionFqdn: $webfrontendLatestRevisionFqdn"
+        # centralTestDoubleFqdn
+        centralTestDoubleFqdn=$(echo $deployResult | jq --raw-output '.properties.outputs.centralTestDoubleFqdn.value')
+        echo "centralTestDoubleFqdn=$centralTestDoubleFqdn" >> $GITHUB_OUTPUT
+        echo "centralTestDoubleFqdn: $centralTestDoubleFqdn"
