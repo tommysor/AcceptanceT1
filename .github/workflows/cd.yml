@@ -249,6 +249,8 @@ jobs:
     - run: |
         pushd spesifications
 
-        echo CentralTestDoubleUrl: ${{ needs.deploy-test.outputs.centralTestDoubleUrl }}
+        SPESIFICATIONS_BASEADDRESS=${{ needs.deploy-test.outputs.webfrontendUrl }} \
+            CENTRAL_TEST_DOUBLE_BASEADDRESS=${{ needs.deploy-test.outputs.centralTestDoubleUrl }} \
+            dotnet test
 
         popd
